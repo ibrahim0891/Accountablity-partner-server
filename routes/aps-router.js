@@ -49,7 +49,7 @@ apsRouter.post('/user/signup', async (req, res) => {
         const token = genarateRandomToken()
         user.token = token
         user.save()
-        res.status(201).send({ message: "User created Successfully..", token: token })
+        res.status(201).send({ message: "User created Successfully..", token: token , uid: user._id.toString() })
     } else {
         res.status(409).send({ message: "User already exist" })
     }
