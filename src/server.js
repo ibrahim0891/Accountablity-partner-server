@@ -4,8 +4,8 @@ const express = require('express');
 const { default: mongoose } = require('mongoose');
 const cors = require('cors')
 
-const apsRouter = require('./routes/aps-router');
-const env = require('./enviroment');
+const apsRouter = require('../routes/aps-router');
+const env = require('../enviroment');
 
 const port = env.PORT;
 const app = express(); 
