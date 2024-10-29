@@ -84,12 +84,12 @@ apsRouter.post('/user/logout', async (req, res) => {
 apsRouter.post('/user/addTransaction', async (req, res) => {
     const { userExist, user } = await userAlreadyExists(User, req.headers.email)
 
-    if (userExist == true && req.headers.token == user.token) {
+    if (userExist == true && req.headers.token == user.token) { 
 
         const existingTransaction = user.transactions
-        const transaction = new Transaction(req.body)
+        const transaction = new Transaction(req.body) 
         try {
-            const matchingTransaction = existingTransaction.find(t =>
+            const matchingTransaction = existingTransaction.find(t => 
                 t.date.toISOString().split('T')[0] === req.body.date.split('T')[0]
             )
 
@@ -109,6 +109,17 @@ apsRouter.post('/user/addTransaction', async (req, res) => {
         res.status(200).send({ message: existingTransaction ? "Transaction updated Successfully.." : "Transaction added Successfully.." })
     } else {
         res.status(403).send({ message: "User not exist" })
+    }
+})
+
+
+apsRouter.delete('/user/deleteAccount', async (req, res) => {
+    const { userExist, user } = await userAlreadyExists(User, req.headers.email)
+    if (userExist == true && req.headers.token == user.token) { 
+        await User.findByIdAndDelete(user._id)      
+          res.status(200).send({ message: "User deleted Successfully.." })
+    } else {
+        res.status(404).send({ message: "User not exist" })
     }
 })
 
