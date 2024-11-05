@@ -9,10 +9,10 @@ const { genarateRandomToken, userAlreadyExists } = require('../utilities/utiliti
 
 const apsRouter = express.Router()
 
- 
 
 
-const User = new mongoose.model( "User", userSchema)
+
+const User = new mongoose.model("User", userSchema)
 
 const Transaction = new mongoose.model("Transaction", transectionSchema)
 apsRouter.get('/getToken', async (req, res) => {
@@ -20,7 +20,7 @@ apsRouter.get('/getToken', async (req, res) => {
     const uid = req.headers.uid
 
     const password = req.headers.password
- 
+
 
 
 })
@@ -38,7 +38,11 @@ apsRouter.get('/user', async (req, res) => {
 //get user by id
 apsRouter.get('/user/:id', async (req, res) => {
     const user = await User.findById(req.params.id)
-    res.status(200).send(user)
+    if (user.length == 0) {
+        res.status(404).send({ message: "User not found" })
+    } else {
+        res.status(200).send(user)
+    }
 })
 
 
@@ -52,7 +56,7 @@ apsRouter.post('/user/signup', async (req, res) => {
         const token = genarateRandomToken()
         user.token = token
         user.save()
-        res.status(201).send({ message: "User created Successfully..", token: token , uid: user._id.toString() })
+        res.status(201).send({ message: "User created Successfully..", token: token, uid: user._id.toString() })
     } else {
         res.status(409).send({ message: "User already exist" })
     }
@@ -87,12 +91,12 @@ apsRouter.post('/user/logout', async (req, res) => {
 apsRouter.post('/user/addTransaction', async (req, res) => {
     const { userExist, user } = await userAlreadyExists(User, req.headers.email)
 
-    if (userExist == true && req.headers.token == user.token) { 
+    if (userExist == true && req.headers.token == user.token) {
 
         const existingTransaction = user.transactions
-        const transaction = new Transaction(req.body) 
+        const transaction = new Transaction(req.body)
         try {
-            const matchingTransaction = existingTransaction.find(t => 
+            const matchingTransaction = existingTransaction.find(t =>
                 t.date.toISOString().split('T')[0] === req.body.date.split('T')[0]
             )
 
@@ -118,9 +122,9 @@ apsRouter.post('/user/addTransaction', async (req, res) => {
 
 apsRouter.delete('/user/deleteAccount', async (req, res) => {
     const { userExist, user } = await userAlreadyExists(User, req.headers.email)
-    if (userExist == true && req.headers.token == user.token) { 
-        await User.findByIdAndDelete(user._id)      
-          res.status(200).send({ message: "User deleted Successfully.." })
+    if (userExist == true && req.headers.token == user.token) {
+        await User.findByIdAndDelete(user._id)
+        res.status(200).send({ message: "User deleted Successfully.." })
     } else {
         res.status(404).send({ message: "User not exist" })
     }
