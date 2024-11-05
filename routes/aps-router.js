@@ -9,15 +9,18 @@ const { genarateRandomToken, userAlreadyExists } = require('../utilities/utiliti
 
 const apsRouter = express.Router()
 
+ 
 
-const User = new mongoose.model(env.USER_DATA_MODEL, userSchema)
+
+const User = new mongoose.model( "User", userSchema)
+
 const Transaction = new mongoose.model("Transaction", transectionSchema)
 apsRouter.get('/getToken', async (req, res) => {
     const user = new User()
     const uid = req.headers.uid
 
     const password = req.headers.password
-
+ 
 
 
 })

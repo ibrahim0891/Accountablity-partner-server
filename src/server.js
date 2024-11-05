@@ -1,27 +1,32 @@
 
 
+require('dotenv').config();
 const express = require('express');
 const { default: mongoose } = require('mongoose');
 const cors = require('cors')
-
 const apsRouter = require('../routes/aps-router');
-const env = require('../enviroment');
 
-const port = env.PORT;
-const app = express();    
 
+console.log(process.env.USER_DATA_MODEL );
+ 
+ 
+const port = process.env.PORT || 3000;
+const dbURL = process.env.DB_URL;
+
+const app = express();
+ 
 app.use(cors())
 app.use(express.json())
 
-mongoose.connect(env.DB_URL).then(() => {
+mongoose.connect(dbURL).then(() => {
     console.log('Connection with databsase successfull');
 }).catch((err) => {
     console.log(err);
 })
 
-app.use('/aps',apsRouter)
+app.use('/aps', apsRouter)
 
-function errorHandler(err , req , res ,next ){
+function errorHandler(err, req, res, next) {
     if (res.headerSent) {
         return next(err)
     }
@@ -29,6 +34,6 @@ function errorHandler(err , req , res ,next ){
 }
 
 app.listen((port), () => {
-    console.log(`Listening on port ${port}`);
+    console.log(`Listening on portport ${port}`);
 
 })
