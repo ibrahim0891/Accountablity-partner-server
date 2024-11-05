@@ -31,13 +31,18 @@ apsRouter.get('/user', async (req, res) => {
         password: 0,
         token: 0
     })
-    res.status(200).send(user)
+    if (user.length == 0) {
+        res.status(404).send({ message: "User not found" })
+    }else{
+        res.status(200).send(user)
+    }
 })
 
 
 //get user by id
 apsRouter.get('/user/:id', async (req, res) => {
     const user = await User.findById(req.params.id)
+    console.log(user);
     if (user.length == 0) {
         res.status(404).send({ message: "User not found" })
     } else {
